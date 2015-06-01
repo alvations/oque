@@ -5,6 +5,10 @@ import numpy as np
 from gensim.utils import tokenize
 from gensim.models import Word2Vec, Phrases
 
+#from nltk.corpus import stopwords
+#eng_stops = stopwords.words('english')
+
+
 def sent_vectorizer(sent, model):
     sent_vec = np.zeros(400)
     numw = 0
@@ -68,7 +72,7 @@ def create_cosine_feature(direction, dataset, quest_data_path='quest/'):
 def cosine_feature(direction, dataset):
     x = np.array(list(create_cosine_feature(direction, dataset)))
     where_are_NaNs = np.isnan(x)
-    x[where_are_NaNs] = 0
+    x[where_are_NaNs] = 9.9999e-11
     return x.reshape(len(x), 1)
             
     

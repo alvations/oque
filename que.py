@@ -7,6 +7,7 @@ from scipy.stats import uniform as sp_rand
 from sklearn.linear_model import BayesianRidge
 from sklearn.grid_search import RandomizedSearchCV
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.svm import SVR
 
 from o import cosine_feature
 
@@ -18,7 +19,9 @@ def load_quest(direction, dataset, which_data, quest_data_path='quest/'):
     meteor_train = load_quest('en-de', 'training', 'meteor')
     meteor_test =  load_quest('en-de', 'test', 'meteor')
     '''
-    return np.loadtxt(quest_data_path+direction+'.'+dataset+'.'+which_data)
+    x = np.loadtxt(quest_data_path+direction+'.'+dataset+'.'+which_data)
+    x = x / np.linalg.norm(x)
+    return x
 
     
 def experiments(direction, to_tune, with_cosine, classifier=None):
@@ -32,7 +35,7 @@ def experiments(direction, to_tune, with_cosine, classifier=None):
     '''
     train, test = 'training', 'test'
     # Load train data
-    baseline_train = load_quest(direction, train, 'baseline17')
+    baseline_train = load_quest(direction, train, 'baseline17') 
     cos_train = cosine_feature(direction, train)
     meteor_train = load_quest(direction, train, 'meteor')
     # Load test data
@@ -54,12 +57,14 @@ def experiments(direction, to_tune, with_cosine, classifier=None):
     
     # Initialize Classifier.
     clf = BayesianRidge()
+    #clf = SVR(kernel='rbf', C=1e3, gamma=0.1)
     if classifier:
         clf = classifier
         to_tune = False
     if to_tune:
         # Grid search: find optimal classifier parameters.
         param_grid = {'alpha_1': sp_rand(), 'alpha_2': sp_rand()}
+        #param_grid = {'C': sp_rand(), 'gamma': sp_rand()}
         rsearch = RandomizedSearchCV(estimator=clf, 
                                      param_distributions=param_grid, n_iter=5000)
         rsearch.fit(X_train, y_train)
@@ -81,6 +86,18 @@ def experiments(direction, to_tune, with_cosine, classifier=None):
     
     mse = mean_squared_error(y_test, np.array(answers))
     mae = mean_absolute_error(y_test, np.array(answers))
+    
+    #for i,j,k in zip(answers, y_test, baseline_train):
+    #    print i,j, k
+    
     return outfile_name, mae, mse
 
+
+# 0.0967
+
+direction = 'en-de'
+to_tune = False
+with_cosine = False
+outfilename, mae, mse = experiments(direction, to_tune, with_cosine)
+print outfilename, mae, mse
 
