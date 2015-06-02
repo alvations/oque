@@ -132,7 +132,7 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
         mse = mean_squared_error(y_test, np.array(answers))
         mae = mean_absolute_error(y_test, np.array(answers))
         if mae < best_score:
-            outfile_name = "oque.baseline." 
+            outfile_name = "oque.baseline." + direction + '.' 
             outfile_name+= "-".join(map(str, f))+'.'+str(mae)+'.output'
             with io.open(outfile_name, 'w') as fout:
                 for i in answers:
