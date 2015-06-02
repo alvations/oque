@@ -102,7 +102,7 @@ def evaluate_classifier(clf, X_test, direction, with_cosine,
 def brute_force_classification(X_train, y_train, X_test, y_test,
                                direction, with_cosine,
                                to_tune, to_output=False, to_hack=False):
-    best_score = 0.067 if direction == 'de-en' else 0.097
+    
     for f in brute_force_feature_selection():
         _X_train = X_train[:, f]
         
@@ -115,12 +115,12 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
     
         mse = mean_squared_error(y_test, np.array(answers))
         mae = mean_absolute_error(y_test, np.array(answers))
-        if mae < best_score:
-            outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
-            outfile_name+= "-".join(map(str, f))+'.output'
-            with io.open(outfile_name, 'w') as fout:
-                for i in answers:
-                    fout.write(unicode(i)+'\n')
+        
+        outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
+        outfile_name+= "-".join(map(str, f))+'.output'
+        with io.open(outfile_name, 'w') as fout:
+            for i in answers:
+                fout.write(unicode(i)+'\n')
         print mae, f
     
 def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
