@@ -118,7 +118,8 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
         X_train = np.concatenate((X_train, cos_train), axis=1)
         X_test = np.concatenate((X_test, cos_test), axis=1)
     
-    best_score = 1.0
+    best_score = 0.067 if direction == 'de-en' else 0.097
+    
     for f in brute_force_feature_selection():
         _X_train = X_train[:, f]
         
@@ -132,8 +133,8 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
         mse = mean_squared_error(y_test, np.array(answers))
         mae = mean_absolute_error(y_test, np.array(answers))
         if mae < best_score:
-            outfile_name = "oque.baseline." + direction + '.' 
-            outfile_name+= "-".join(map(str, f))+'.'+str(mae)+'.output'
+            outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
+            outfile_name+= "-".join(map(str, f))+'.output'
             with io.open(outfile_name, 'w') as fout:
                 for i in answers:
                     fout.write(unicode(i)+'\n')
