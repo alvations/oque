@@ -98,7 +98,30 @@ def evaluate_classifier(clf, X_test, direction, with_cosine,
             for i in answers:
                 fout.write(unicode(i)+'\n')
     return answers, outfile_name
-                
+
+def brute_force_classification(X_train, y_train, X_test, y_test,
+                               direction, with_cosine,
+                               to_tune, to_output=False, to_hack=False):
+    best_score = 0.067 if direction == 'de-en' else 0.097
+    for f in brute_force_feature_selection():
+        _X_train = X_train[:, f]
+        
+        _X_test = X_test[:, f]
+        # Train classifier
+        clf = train_classiifer(_X_train, y_train, to_tune, classifier=None)
+        answers, outfile_name = evaluate_classifier(clf, _X_test, direction, 
+                                               with_cosine, to_tune, 
+                                               to_output=False, to_hack=False)
+    
+        mse = mean_squared_error(y_test, np.array(answers))
+        mae = mean_absolute_error(y_test, np.array(answers))
+        if mae < best_score:
+            outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
+            outfile_name+= "-".join(map(str, f))+'.output'
+            with io.open(outfile_name, 'w') as fout:
+                for i in answers:
+                    fout.write(unicode(i)+'\n')
+        print mae, f
     
 def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
                 to_debug=False, classifier=None):
@@ -118,27 +141,23 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
         X_train = np.concatenate((X_train, cos_train), axis=1)
         X_test = np.concatenate((X_test, cos_test), axis=1)
     
-    best_score = 0.067 if direction == 'de-en' else 0.097
+    brute_force_classification(X_train, y_train, X_test, y_test, direction, 
+                               with_cosine, to_tune, to_output=False, 
+                               to_hack=False)
     
-    for f in brute_force_feature_selection():
-        _X_train = X_train[:, f]
-        
-        _X_test = X_test[:, f]
-        # Train classifier
-        clf = train_classiifer(_X_train, y_train, to_tune, classifier)
-        answers, outfile_name = evaluate_classifier(clf, _X_test, direction, 
-                                               with_cosine, to_tune, 
-                                               to_output=False, to_hack=False)
+    '''
+    # Best setup for EN-DE up till now.
+    f = (2, 9, 13)
+    _X_train = X_train[:, f]
+    _X_test = X_test[:, f]
+    clf = train_classiifer(_X_train, y_train, to_tune, classifier=None)
+    answers, outfile_name = evaluate_classifier(clf, _X_test, direction, 
+                                           with_cosine, to_tune, 
+                                           to_output=True, to_hack=False)
+    '''
     
-        mse = mean_squared_error(y_test, np.array(answers))
-        mae = mean_absolute_error(y_test, np.array(answers))
-        if mae < best_score:
-            outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
-            outfile_name+= "-".join(map(str, f))+'.output'
-            with io.open(outfile_name, 'w') as fout:
-                for i in answers:
-                    fout.write(unicode(i)+'\n')
-        print mae, f
+    mse = mean_squared_error(y_test, np.array(answers))
+    mae = mean_absolute_error(y_test, np.array(answers))
     
     if to_debug:
         srcfile = io.open('quest/en-de_source.test', 'r')
