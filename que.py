@@ -103,6 +103,7 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
                                direction, with_cosine,
                                to_tune, to_output=False, to_hack=False):
     
+    score_fout = io.open('que.'+direction+'.scores', 'w')
     for f in brute_force_feature_selection():
         _X_train = X_train[:, f]
         
@@ -121,7 +122,7 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
         with io.open(outfile_name, 'w') as fout:
             for i in answers:
                 fout.write(unicode(i)+'\n')
-        print mae, f
+        score_fout.write( str(mae) + ' ' + str(f) + '\n')
     
 def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
                 to_debug=False, classifier=None):
