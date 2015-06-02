@@ -1,5 +1,5 @@
 
-import io
+import io, sys
 
 import numpy as np
 from scipy.stats import uniform as sp_rand
@@ -103,7 +103,7 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
                                direction, with_cosine,
                                to_tune, to_output=False, to_hack=False):
     
-    score_fout = io.open('que.'+direction+'.scores', 'w')
+    #score_fout = io.open('que.'+direction+'.scores', 'w')
     for f in brute_force_feature_selection():
         _X_train = X_train[:, f]
         
@@ -122,7 +122,8 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
         with io.open(outfile_name, 'w') as fout:
             for i in answers:
                 fout.write(unicode(i)+'\n')
-        score_fout.write( unicode(mae) + ' ' + unicode(f) + '\n')
+        print mae, f
+        sys.stdout.flush()
     
 def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
                 to_debug=False, classifier=None):
