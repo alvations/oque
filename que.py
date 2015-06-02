@@ -122,7 +122,7 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
         with io.open(outfile_name, 'w') as fout:
             for i in answers:
                 fout.write(unicode(i)+'\n')
-        score_fout.write( str(mae) + ' ' + str(f) + '\n')
+        score_fout.write( unicode(mae) + ' ' + unicode(f) + '\n')
     
 def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
                 to_debug=False, classifier=None):
