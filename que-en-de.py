@@ -117,11 +117,12 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
         mse = mean_squared_error(y_test, np.array(answers))
         mae = mean_absolute_error(y_test, np.array(answers))
         
-        outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
-        outfile_name+= "-".join(map(str, f))+'.output'
-        with io.open(outfile_name, 'w') as fout:
-            for i in answers:
-                fout.write(unicode(i)+'\n')
+        if to_output:
+            outfile_name = "results/oque.baseline." + direction +'.'+str(mae) + '.' 
+            outfile_name+= "-".join(map(str, f))+'.output'
+            with io.open(outfile_name, 'w') as fout:
+                for i in answers:
+                    fout.write(unicode(i)+'\n')
         print mae, f
         sys.stdout.flush()
     
