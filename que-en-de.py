@@ -76,7 +76,7 @@ def brute_force_feature_selection():
             yield f
 
 def evaluate_classifier(clf, X_test, direction, with_cosine, 
-                        to_tune, to_output=True, to_hack=False):
+                        to_tune, to_output=False, to_hack=False):
     answers = list(clf.predict(X_test))
     if to_hack:
         hacked_answers = []
@@ -125,7 +125,7 @@ def brute_force_classification(X_train, y_train, X_test, y_test,
         print mae, f
         sys.stdout.flush()
     
-def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False, 
+def experiments(direction, with_cosine, to_tune, to_output=False, to_hack=False, 
                 to_debug=False, classifier=None):
     '''
     # USAGE:
@@ -177,7 +177,7 @@ direction = 'en-de'
 with_cosine = False
 to_tune = False
 to_output = False
-outfilename, mae, mse = experiments(direction, with_cosine,to_tune, to_output, to_debug=False)
+outfilename, mae, mse = experiments(direction, with_cosine,to_tune, to_output=False, to_debug=False)
 print outfilename, mae, mse
 
 # DE-EN
