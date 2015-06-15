@@ -166,7 +166,7 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
         trgfile = io.open('quest/en-de_target.test', 'r')
         cos_train, cos_test = load_cosine_features(direction)
         for i,j,k,s,t, c in zip(answers, y_test, X_test, 
-                                srcfile, trgfile, cos_test):   
+                                srcfile, trgfile, cos_test):
             if i - j > 0.095 or j -1 > 0.095 or c == 9.99990000e-11: 
                 print i, j, k[0], k[9], k, c
                 print s, t
@@ -176,7 +176,7 @@ def experiments(direction, with_cosine, to_tune, to_output=True, to_hack=False,
 direction = 'en-de'
 with_cosine = False
 to_tune = False
-to_output = True
+to_output = False
 outfilename, mae, mse = experiments(direction, with_cosine,to_tune, to_output, to_debug=False)
 print outfilename, mae, mse
 
